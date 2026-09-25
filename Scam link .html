@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Date Invite 💗</title>
+<style>
+:root{
+  --pink:#e91e8f; --soft:#f7eef0; --ink:#65484a; --muted:#a78689;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Georgia,"Times New Roman",serif}
+body{
+  min-height:100vh;display:grid;place-items:center;overflow:hidden;
+  background:
+    radial-gradient(circle at 15% 15%,#fff 0 2px,transparent 3px),
+    radial-gradient(circle at 82% 30%,#f3cbd4 0 2px,transparent 3px),
+    radial-gradient(circle at 65% 78%,#fff 0 2px,transparent 3px),
+    #f8eef0;
+  background-size:140px 140px,180px 180px,210px 210px,auto;
+}
+.app{width:min(92vw,460px);padding:20px;position:relative}
+.card{
+  position:relative;background:rgba(255,255,255,.92);border:1px solid #ead9dd;
+  border-radius:14px;padding:28px 25px 24px;text-align:center;
+  box-shadow:0 18px 50px rgba(117,71,82,.14);
+  min-height:300px;display:flex;flex-direction:column;justify-content:center;
+}
+.card.enter{animation:cardIn .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes cardIn{
+  0%{opacity:0;transform:translateY(18px) scale(.96)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+.icon{
+  width:54px;height:54px;border-radius:12px;margin:0 auto 12px;
+  display:grid;place-items:center;background:#f8e6ea;font-size:29px;
+  animation:iconPop .7s cubic-bezier(.17,.89,.32,1.28);
+}
+@keyframes iconPop{0%{transform:scale(.5) rotate(-8deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+h1{font-size:23px;line-height:1.2;margin:4px 0 9px;color:var(--ink)}
+p{font-size:13px;line-height:1.55;color:var(--muted);margin:7px 0 15px}
+button,input{
+  font:inherit;border-radius:8px;width:100%;padding:11px 13px;
+}
+button{border:0;background:var(--pink);color:white;cursor:pointer;font-size:13px;
+  box-shadow:0 7px 16px rgba(233,30,143,.18);transition:.18s}
+button:hover{transform:translateY(-1px)}
+button:active{transform:scale(.97)}
+.no{background:#f4dfe4;color:#8c6268;box-shadow:none}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
+.hidden{display:none!important}
+.dog{width:62px;height:62px;object-fit:cover;border-radius:9px;margin:0 auto 10px;box-shadow:0 5px 15px #0001}
+.fallback-dog{font-size:45px}
+label{text-align:left;font-size:12px;color:#8e7074;margin:10px 0 5px;display:block}
+input{border:1px solid #ead9dd;background:#fff;color:#6c5154;outline:none}
+input:focus{border-color:#e99ab8;box-shadow:0 0 0 3px #e99ab833}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
+.food{
+  background:#fff;border:1px solid #ead9dd;color:#73575a;box-shadow:none;padding:10px 4px;font-size:12px
+}
+.food.selected{border-color:#e91e8f;background:#fff0f7;box-shadow:0 0 0 2px #e91e8f22}
+.big{font-size:25px;display:block;margin-bottom:2px}
+.final{font-size:27px;margin-bottom:6px}
+.pulse{animation:pulse 1.6s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 9px #e91e8f12}}
+.float{
+  position:fixed;left:0;top:0;pointer-events:none;z-index:5;
+  animation:floatUp 2.8s ease-out forwards;font-size:18px;
+}
+@keyframes floatUp{
+  0%{opacity:0;transform:translate3d(0,30px,0) scale(.6) rotate(0)}
+  12%{opacity:1}
+  100%{opacity:0;transform:translate3d(var(--dx),-105vh,0) scale(1.2) rotate(28deg)}
+}
+.spark{
+  position:fixed;width:5px;height:5px;border-radius:50%;background:#e99ab8;
+  pointer-events:none;z-index:4;animation:spark .9s ease-out forwards;
+}
+@keyframes spark{to{transform:translate(var(--x),var(--y)) scale(0);opacity:0}}
+.shake{animation:shake .42s}
+@keyframes shake{
+  20%{transform:translateX(-5px)}40%{transform:translateX(5px)}
+  60%{transform:translateX(-4px)}80%{transform:translateX(4px)}
+}
+.tiny{font-size:11px;color:#b28e92}
+</style>
+</head>
+<body>
+<main class="app">
+  <section id="card" class="card enter"></section>
+</main>
+
+<script>
+const dogImage = "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";
+let dateValue="", timeValue="", mood="";
+const moods=[
+  ["🍕","Pizza"],["🍜","Ramen"],["🍔","Burger"],
+  ["🍝","Pasta"],["🌮","Tacos"],["☕","Cafe"]
+];
+
+function render(content){
+  const card=document.getElementById("card");
+  card.classList.remove("enter");
+  void card.offsetWidth;
+  card.classList.add("enter");
+  card.innerHTML=content;
+}
+function hearts(count=24){
+  for(let i=0;i<count;i++){
+    const e=document.createElement("div");
+    e.className="float";
+    e.textContent=["💗","💖","💕","🌸","✨"][Math.floor(Math.random()*5)];
+    e.style.left=(Math.random()*100)+"vw";
+    e.style.top=(78+Math.random()*18)+"vh";
+    e.style.setProperty("--dx",((Math.random()-.5)*180)+"px");
+    e.style.animationDelay=(Math.random()*.9)+"s";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),3500);
+  }
+}
+function burst(){
+  for(let i=0;i<18;i++){
+    const s=document.createElement("div");s.className="spark";
+    s.style.left="50%";s.style.top="50%";
+    s.style.setProperty("--x",((Math.random()-.5)*260)+"px");
+    s.style.setProperty("--y",((Math.random()-.5)*220)+"px");
+    document.body.appendChild(s);setTimeout(()=>s.remove(),1000);
+  }
+}
+function first(){
+ render(`
+   ${dogImage ? `<img class="dog" src="data:image/jpeg;base64,${dogImage}">` : `<div class="fallback-dog">🐶</div>`}
+   <h1>🌸 Will you go on a date with me? 🌸</h1>
+   <p>Be honest... but choose carefully 👀</p>
+   <div class="btns">
+     <button onclick="yes1()">YES 💗</button>
+     <button class="no" id="noBtn" onclick="nope()">NO 😭</button>
+   </div>
+ `);
+}
+function nope(){
+ const b=document.getElementById("noBtn");
+ b.classList.add("shake");
+ setTimeout(()=>b.classList.remove("shake"),450);
+ b.innerText=["Are you sure? 🥺","Think again 😭","Wrong button 😭","NO is not available 😌"][Math.floor(Math.random()*4)];
+}
+function yes1(){
+ burst();hearts(14);
+ setTimeout(step2,320);
+}
+function step2(){
+ render(`
+   <div class="icon">💊</div>
+   <h1>WAIT YOU ACTUALLY<br>SAID YES??</h1>
+   <p>I knew you were too cute to say no 😭💗</p>
+   <button onclick="step3()">okayyy 💕</button>
+ `);
+}
+function step3(){
+ render(`
+   <div class="icon">📅</div>
+   <h1>So... when are you free?</h1>
+   <p>Pick a day and time for our date ✨</p>
+   <label>Pick a Day 📆</label>
+   <input id="date" type="date">
+   <label>What Time? ⏰</label>
+   <input id="time" type="time">
+   <button onclick="saveDate()">Next 💗</button>
+ `);
+}
+function saveDate(){
+ const d=document.getElementById("date").value,t=document.getElementById("time").value;
+ if(!d||!t){alert("Date aur time select karo 😌");return}
+ dateValue=d;timeValue=t;step4();
+}
+function step4(){
+ render(`
+   <div class="icon">🍽️</div>
+   <h1>What are we feeling? 🍴</h1>
+   <p>Pick your date mood</p>
+   <div class="grid">
+     ${moods.map((m,i)=>`<button class="food" onclick="pickMood(this,'${m[1]}')"><span class="big">${m[0]}</span>${m[1]}</button>`).join("")}
+   </div>
+   <button onclick="step5()">Continue 💕</button>
+ `);
+}
+function pickMood(el,m){document.querySelectorAll(".food").forEach(x=>x.classList.remove("selected"));el.classList.add("selected");mood=m}
+function step5(){
+ if(!mood){alert("Ek option choose karo 💗");return}
+ render(`
+   <div class="final">💌</div>
+   <h1>glad you didn't say no.</h1>
+   <p>I promise it'll be worth it. Food, laughs, and me trying to impress you 😭💗</p>
+   <p class="tiny">Date: ${pretty(dateValue,timeValue)}<br>Plan: ${mood}</p>
+   <button class="pulse" onclick="confirmDate()">it's a date 💗</button>
+ `);
+}
+function pretty(d,t){
+ const x=new Date(d+"T"+t);
+ return x.toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"numeric",minute:"2-digit"});
+}
+function confirmDate(){
+ burst();hearts(40);
+ setTimeout(()=>{
+  render(`
+    <div class="final">💖</div>
+    <h1>DATE CONFIRMED!</h1>
+    <p><b>${pretty(dateValue,timeValue)}</b><br>${mood} ✨</p>
+    <p>See you soon, cutie 🫶</p>
+    <button onclick="hearts(35)">send love 💕</button>
+  `);
+ },250);
+}
+first();
+</script>
+</body>
+</html>
